@@ -1,0 +1,21 @@
+-- menggunakan firefox
+{
+    "webserviceUrl": "http://localhost:8000/api/",
+    "websocketPort": 8888,
+    "puppeteer": {
+        "headless": true,
+	"executablePath": "/usr/bin/firefox"
+    },
+    "folderDownload": "unduhan"
+}
+ -- menggunakan google-chrome
+
+{
+    "webserviceUrl": "http://localhost:8000/api/",
+    "websocketPort": 8888,
+    "puppeteer": {
+        "headless": true,        
+        "executablePath": "/usr/bin/google-chrome"
+    },
+    "folderDownload": "unduhan"
+}

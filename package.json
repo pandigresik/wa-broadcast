@@ -1,0 +1,29 @@
+{
+  "name": "wa-broadcast",
+  "version": "1.0.0",
+  "description": "automate message whatsapp",
+  "main": "index.js",
+  "type": "project",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "build": "webpack --config webpack.config"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "node-fetch": "^2.6.1",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "*"
+  },
+  "keywords": [],
+  "author": "ahmad afandi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pandigresik/wa-broadcast.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pandigresik/wa-broadcast/issues"
+  },
+  "homepage": "https://github.com/pandigresik/wa-broadcast#readme"
+}

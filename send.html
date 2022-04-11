@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Whatsapp Sender</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+		integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+		<h5 class="my-0 mr-md-auto font-weight-normal">Whatsapp Sender</h5>
+
+	</div>
+	<div class="container">
+		<button class="btn btn-success" id="sendBtn">Kirim Pesan</button>
+		<div class="jumbotron" id="drop">Drop a spreadsheet file here to see sheet data</div>
+		<pre id="out"></pre>		
+
+	</div>
+
+	<script src="./js-xlsx/shim.js"></script>
+	<script src="./js-xlsx/dist/xlsx.full.min.js"></script>
+	<script>
+		/*jshint browser:true */
+		/* eslint-env browser */
+		/* eslint no-use-before-define:0 */
+		/*global Uint8Array, Uint16Array, ArrayBuffer */
+		/*global XLSX */
+		var X = XLSX;
+		var dataSend;
+
+		var global_wb;
+
+		var process_wb = (function () {
+			var OUT = document.getElementById('out');			
+			
+			var to_json = function to_json(workbook) {
+				var result = {};
+				workbook.SheetNames.forEach(function (sheetName) {
+					var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName], {
+						header: 0
+					});
+					if (roa.length) result = roa;
+				});
+				return result;
+			};
+
+			return function process_wb(wb) {
+				global_wb = wb;
+				dataSend = to_json(wb);
+				var output = JSON.stringify(dataSend, 2, 2);
+
+				if (OUT.innerText === undefined) OUT.textContent = output;
+				else OUT.innerText = output;
+				if (typeof console !== 'undefined') console.log("output", new Date());
+			};
+		})();
+
+		var do_file = (function () {
+			var rABS = typeof FileReader !== "undefined" && (FileReader.prototype || {}).readAsBinaryString;
+
+			return function do_file(files) {
+				var f = files[0];
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					var data = e.target.result;
+					if (!rABS) data = new Uint8Array(data);
+					process_wb(X.read(data, {
+						type: rABS ? 'binary' : 'array'
+					}));
+				};
+				if (rABS) reader.readAsBinaryString(f);
+				else reader.readAsArrayBuffer(f);
+			};
+		})();
+
+		(function () {
+			var drop = document.getElementById('drop');
+			var sendBtn = document.getElementById('sendBtn');
+
+			if (!drop.addEventListener) return;
+
+			function handleDrop(e) {
+				e.stopPropagation();
+				e.preventDefault();
+				var OUT = document.getElementById('out');
+				OUT.innerText = 'processing file, please wait'
+				do_file(e.dataTransfer.files);
+			}
+
+			function handleDragover(e) {
+				e.stopPropagation();
+				e.preventDefault();
+				e.dataTransfer.dropEffect = 'copy';
+			}
+
+			drop.addEventListener('dragenter', handleDragover, false);
+			drop.addEventListener('dragover', handleDragover, false);
+			drop.addEventListener('drop', handleDrop, false);
+
+			/*web socket*/
+			var ws;
+			var url = 'ws://127.0.0.1:8888';
+			ws = new WebSocket(url);
+
+			ws.onopen = function () {
+				console.log('open');
+			};
+
+			ws.onclose = function () {
+				console.log('close');
+			};
+
+			ws.onmessage = function (e) {
+				console.log(e);
+			};
+
+			ws.onerror = function () {
+				console.log('error');
+			};
+
+			function sendMessage() {
+				if (dataSend) {
+					ws.send(JSON.stringify({
+						type: "sendWa",
+						data: dataSend
+					}));
+					var OUT = document.getElementById('out');
+					OUT.innerHTML = 'pesan telah dikirim';
+					dataSend = null;
+				} else {
+					alert('belum ada pesan yang dikirim');
+				}
+			}
+
+			if (!sendBtn.addEventListener) return;
+			sendBtn.addEventListener('click', sendMessage, false);
+		})();
+	</script>
+</body>
+
+</html>

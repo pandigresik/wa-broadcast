@@ -1,0 +1,26 @@
+{
+    "webserviceUrl": "http://localhost:8000/api/",
+    "websocketPort": 8888,
+    "puppeteer": {
+        "headless": false,        
+        "executablePath": "/usr/bin/google-chrome"
+    },
+    "folderDownload": "unduhan",
+    "mimetypeCaption": [
+        "video/x-msvideo",
+        "image/bmp",
+        "image/gif",
+        "image/jpeg",
+        "audio/mpeg",
+        "video/mp4",
+        "video/mpeg",
+        "audio/ogg",
+        "video/ogg",
+        "image/png",
+        "image/svg+xml",
+        "audio/wav",
+        "audio/webm",
+        "video/webm",
+        "image/webp"
+    ]
+}
