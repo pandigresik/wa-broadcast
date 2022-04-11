@@ -64,6 +64,7 @@ typings/
 # next.js build output
 .next
 
+.wwebjs_auth
 session.json
 
 ws_client_php/vendor
