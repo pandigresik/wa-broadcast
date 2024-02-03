@@ -22,7 +22,7 @@ const client = new Client({
 // This object must include WABrowserId, WASecretBundle, WAToken1 and WAToken2.
 
 client.initialize();
-
+console.log(client)
 client.on('qr', (qr) => {
     // NOTE: This event will not be fired if a session is specified.
     console.log('QR RECEIVED', qr)
@@ -52,12 +52,12 @@ client.on('ready', () => {
     kurir = new Kurir(client)
 });
 
-client.on('message', async msg => {
-    console.log(msg)
+client.on('message', async msg => {        
     if(kurir === undefined) return
     if (msg.body.startsWith('/')) {
+        console.log(msg.body)        
         // Send a new message to the same chat
-        kurir.chat(msg);
+        kurir.chat(msg);        
     }
 });
 
@@ -143,7 +143,7 @@ async function handleMessage(e) {
     if (obj.type == 'sendWa') {
         //  let validType = ['text', 'image', 'document', 'location', 'video']
         let numbers = obj.data
-        let options = {}
+        let options = {}, pesannya
         let tmpAttachment = {}
         for (var i in numbers) {            
             options = numbers[i].options !== undefined ? numbers[i].options : {}
@@ -175,9 +175,9 @@ async function handleMessage(e) {
                         client.sendMessage(numbers[i].to, numbers[i].message)
                     }
                 }
-            }
-            
-            client.sendMessage(numbers[i].to, numbers[i].message, options)
+            }            
+            pesannya = numbers[i].message.replace(/\\n/g, '\n').replace(/\\r/g, '\r')            
+            client.sendMessage(numbers[i].to, pesannya, options)                                    
         }
         tmpAttachment = {}
     }
