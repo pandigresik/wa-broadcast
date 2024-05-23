@@ -13,7 +13,7 @@
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.1",
     "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "*"
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#webpack-exodus"
   },
   "keywords": [],
   "author": "ahmad afandi",

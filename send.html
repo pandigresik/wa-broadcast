@@ -17,8 +17,20 @@
 
 	</div>
 	<div class="container">
-		<button class="btn btn-success" id="sendBtn">Kirim Pesan</button>
-		<div class="jumbotron" id="drop">Drop a spreadsheet file here to see sheet data</div>
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-md-2">
+				<button class="btn btn-success" id="sendBtn">Kirim Pesan</button>
+			</div>
+			<div class="col-md-10">
+				<div class="custom-file">
+					<input type="file" class="custom-file-input" id="myFile">
+					<label class="custom-file-label" for="myFile">Choose file</label>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div class="jumbotron" id="drop">Drop a spreadsheet file here to see sheet data or browse file</div>
 		<pre id="out"></pre>		
 
 	</div>
@@ -81,6 +93,9 @@
 
 		(function () {
 			var drop = document.getElementById('drop');
+			// Get the selected file when input changes
+			const myfile = document.getElementById("myFile");
+			
 			var sendBtn = document.getElementById('sendBtn');
 
 			if (!drop.addEventListener) return;
@@ -93,6 +108,14 @@
 				do_file(e.dataTransfer.files);
 			}
 
+			function handleUpload(e) {
+				e.stopPropagation();
+				e.preventDefault();
+				var OUT = document.getElementById('out');
+				OUT.innerText = 'processing file, please wait'
+				do_file(e.target.files);
+			}
+
 			function handleDragover(e) {
 				e.stopPropagation();
 				e.preventDefault();
@@ -102,7 +125,7 @@
 			drop.addEventListener('dragenter', handleDragover, false);
 			drop.addEventListener('dragover', handleDragover, false);
 			drop.addEventListener('drop', handleDrop, false);
-
+			myfile.addEventListener('change', handleUpload, false);
 			/*web socket*/
 			var ws;
 			var url = 'ws://127.0.0.1:8888';
